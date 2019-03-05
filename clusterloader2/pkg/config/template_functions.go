@@ -38,6 +38,7 @@ func GetFuncs() template.FuncMap {
 		"SubtractInt":   subtractInt,
 		"MultiplyInt":   multiplyInt,
 		"DivideInt":     divideInt,
+		"ModInt":        modInt,
 		"AddFloat":      addFloat,
 		"SubtractFloat": subtractFloat,
 		"MultiplyFloat": multiplyFloat,
@@ -108,6 +109,12 @@ func multiplyInt(numbers ...interface{}) int {
 
 func divideInt(i, j interface{}) int {
 	return int(divideFloat(i, j))
+}
+
+func modInt(i, j interface{}) int {
+	typedI := int(toFloat64(i))
+	typedJ := int(toFloat64(j))
+	return typedI % typedJ
 }
 
 func addFloat(numbers ...interface{}) float64 {
