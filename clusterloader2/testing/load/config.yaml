@@ -60,33 +60,6 @@ steps:
     Params:
       action: start
       nodeMode: {{$NODE_MODE}}
-# Create SVCs
-- phases:
-  - namespaceRange:
-      min: 1
-      max: {{$namespaces}}
-    replicasPerNamespace: {{DivideInt (AddInt $bigRcsPerNamespace 1) 2}}
-    tuningSet: Sequence
-    objectBundle:
-    - basename: big-service
-      objectTemplatePath: service.yaml
-  - namespaceRange:
-      min: 1
-      max: {{$namespaces}}
-    replicasPerNamespace: {{DivideInt (AddInt $mediumRcsPerNamespace 1) 2}}
-    tuningSet: Sequence
-    objectBundle:
-    - basename: medium-service
-      objectTemplatePath: service.yaml
-  - namespaceRange:
-      min: 1
-      max: {{$namespaces}}
-    replicasPerNamespace: {{DivideInt (AddInt $smallRcsPerNamespace 1) 2}}
-    tuningSet: Sequence
-    objectBundle:
-    - basename: small-service
-      objectTemplatePath: service.yaml
-- name: Creating SVCs
 # Create RCs
 - measurements:
   - Identifier: WaitForRunningRCs
@@ -104,6 +77,8 @@ steps:
     replicasPerNamespace: {{$bigRcsPerNamespace}}
     tuningSet: RandomizedSaturationTimeLimited
     objectBundle:
+    - basename: big-service
+      objectTemplatePath: service.yaml
     - basename: big-rc
       objectTemplatePath: rc.yaml
       templateFillMap:
@@ -116,6 +91,8 @@ steps:
     replicasPerNamespace: {{$mediumRcsPerNamespace}}
     tuningSet: RandomizedSaturationTimeLimited
     objectBundle:
+    - basename: medium-service
+      objectTemplatePath: service.yaml
     - basename: medium-rc
       objectTemplatePath: rc.yaml
       templateFillMap:
@@ -128,6 +105,8 @@ steps:
     replicasPerNamespace: {{$smallRcsPerNamespace}}
     tuningSet: RandomizedSaturationTimeLimited
     objectBundle:
+    - basename: small-service
+      objectTemplatePath: service.yaml
     - basename: small-rc
       objectTemplatePath: rc.yaml
       templateFillMap:
@@ -192,6 +171,8 @@ steps:
     replicasPerNamespace: 0
     tuningSet: RandomizedSaturationTimeLimited
     objectBundle:
+    - basename: big-service
+      objectTemplatePath: service.yaml
     - basename: big-rc
       objectTemplatePath: rc.yaml
   - namespaceRange:
@@ -200,6 +181,8 @@ steps:
     replicasPerNamespace: 0
     tuningSet: RandomizedSaturationTimeLimited
     objectBundle:
+    - basename: medium-service
+      objectTemplatePath: service.yaml
     - basename: medium-rc
       objectTemplatePath: rc.yaml
   - namespaceRange:
@@ -208,6 +191,8 @@ steps:
     replicasPerNamespace: 0
     tuningSet: RandomizedSaturationTimeLimited
     objectBundle:
+    - basename: small-service
+      objectTemplatePath: service.yaml
     - basename: small-rc
       objectTemplatePath: rc.yaml
 - name: Deleting RCs
@@ -216,33 +201,6 @@ steps:
     Method: WaitForControlledPodsRunning
     Params:
       action: gather
-# Delete SVCs
-- phases:
-  - namespaceRange:
-      min: 1
-      max: {{$namespaces}}
-    replicasPerNamespace: 0
-    tuningSet: Sequence
-    objectBundle:
-    - basename: big-service
-      objectTemplatePath: service.yaml
-  - namespaceRange:
-      min: 1
-      max: {{$namespaces}}
-    replicasPerNamespace: 0
-    tuningSet: Sequence
-    objectBundle:
-    - basename: medium-service
-      objectTemplatePath: service.yaml
-  - namespaceRange:
-      min: 1
-      max: {{$namespaces}}
-    replicasPerNamespace: 0
-    tuningSet: Sequence
-    objectBundle:
-    - basename: small-service
-      objectTemplatePath: service.yaml
-- name: Deleting SVCs
 # Collect measurements
 - measurements:
   - Identifier: APIResponsiveness
